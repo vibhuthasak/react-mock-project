@@ -15,11 +15,13 @@ function ProductRow(props) {
   );
 }
 
-
 // Product Category Row
 function ProductCategoryRow(props){
   return(
-    <tr style={{'backgroundColor': 'blue'}}>{props.ItemType}</tr>
+    <tr style={{'backgroundColor': 'blue'}}>
+      <td>{props.ItemType}</td>
+      <td style={{"backgroundColor": "red"}}></td>
+    </tr>
   );
 }
 
@@ -27,8 +29,12 @@ function ProductCategoryRow(props){
 function ProductTable(props){
   // Props : props.products
   // Need to identify how many diffrent categories
+  const filterText = props.filterText;
+  const inStockOnly = props.inStockOnly;
+
   const categories = []
   const tableRows = []
+  
   props.products.forEach((product) => {
     // Checking if item already on categories list
     // If not includes, Add it to the list
@@ -38,11 +44,17 @@ function ProductTable(props){
   });
   
   // Adding rows to table according categories
-  categories.forEach((category) => {
-    tableRows.push(<ProductCategoryRow ItemType={category}/>)
-    props.products.forEach((product) => {
+  categories.forEach((category, key1) => {
+    tableRows.push(<ProductCategoryRow key={`${key1}`} ItemType={category}/>)
+    props.products.forEach((product, key2) => {
+      if (product.name.indexOf(filterText) === -1) {
+        return;
+      }
+      if (inStockOnly && !product.stocked) {
+        return;
+      }
       if ((product.category) === category) {
-        tableRows.push(<ProductRow ItemName={product.name} ItemPrice={product.price} inStock={product.stocked}/>)
+        tableRows.push(<ProductRow key={`${key1}${key2}`} ItemName={product.name} ItemPrice={product.price} inStock={product.stocked}/>)
       }
     })
   })
