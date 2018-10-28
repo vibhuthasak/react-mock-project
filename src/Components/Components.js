@@ -56,17 +56,41 @@ function ProductTable(props){
   );
 }
 
-// Search Bar
-function SearchBar () {
-  return (
-    <form>
-      <input type="text" placeholder="Search..." />
-      <p>
-        <input type="checkbox" />
-        {' '}
-        Only show products in stock
-      </p>
-    </form>
-  );
+class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.TextInputChange = this.TextInputChange.bind(this)
+    this.CheckInputChange = this.CheckInputChange.bind(this)
+  }
+
+  TextInputChange(e) {
+    this.props.onFilterTextChange(e.target.value);
+  }
+
+  CheckInputChange(e) {
+    this.props.onInputChecked(e.target.checked)
+  }
+
+  render () {
+    return (
+      <form>
+        <input 
+          type="text" 
+          placeholder="Search..." 
+          value={this.props.filterText}
+          onChange={this.TextInputChange}
+        />
+        <p>
+          <input 
+            type="checkbox" 
+            checked={this.props.inStockOnly}
+            onChange={this.CheckInputChange}
+          />
+          {' '}
+          Only show products in stock
+        </p>
+      </form>
+    );
+  }
 }
 export {ProductTable, SearchBar};
